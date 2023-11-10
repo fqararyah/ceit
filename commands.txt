@@ -1,0 +1,5 @@
+python main.py --eval --model ceit_tiny_patch16_224 --resume /media/SSD2TB/fareed/wd/my_repos/transformers/ceit/ceit_ckpt/ceit_ckpt/ceit_tiny_patch16_224_epochs300/checkpoint.pth --data-path /media/SSD2TB/shared/vedliot_evaluation/D3.3_Accuracy_Evaluation/imagenet/imagenet_sample
+
+python main.py --eval --model ceit_small_patch16_224 --resume /media/SSD2TB/fareed/wd/my_repos/transformers/ceit/ceit_ckpt/ceit_ckpt/ceit_small_patch16_224_epochs300/checkpoint.pth --data-path /media/SSD2TB/shared/vedliot_evaluation/D3.3_Accuracy_Evaluation/imagenet/imagenet_sample
+
+python main.py --eval --model ceit_base_patch16_224 --resume /media/SSD2TB/fareed/wd/my_repos/transformers/ceit/ceit_ckpt/ceit_ckpt/ceit_base_patch16_224_100epochs/ --data-path /media/SSD2TB/shared/vedliot_evaluation/D3.3_Accuracy_Evaluation/imagenet/imagenet_sample

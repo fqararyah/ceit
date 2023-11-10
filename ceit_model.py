@@ -55,14 +55,18 @@ class LocallyEnhancedFeedForward(nn.Module):
         super().__init__()
         out_features = out_features or in_features
         hidden_features = hidden_features or in_features
+
         # pointwise
+        #print("pw", in_features, hidden_features)
         self.conv1 = nn.Conv2d(in_features, hidden_features, kernel_size=1, stride=1, padding=0)
         # depthwise
+        #print("dw", hidden_features, hidden_features, kernel_size)
         self.conv2 = nn.Conv2d(
             hidden_features, hidden_features, kernel_size=kernel_size, stride=1,
             padding=(kernel_size - 1) // 2, groups=hidden_features
         )
         # pointwise
+        #print("pw", hidden_features, out_features)
         self.conv3 = nn.Conv2d(hidden_features, out_features, kernel_size=1, stride=1, padding=0)
         self.act = act_layer()
         # self.drop = nn.Dropout(drop)
@@ -75,15 +79,19 @@ class LocallyEnhancedFeedForward(nn.Module):
 
     def forward(self, x):
         b, n, k = x.size()
+        #print(x.size())
         cls_token, tokens = torch.split(x, [1, n - 1], dim=1)
         x = tokens.reshape(b, int(math.sqrt(n - 1)), int(math.sqrt(n - 1)), k).permute(0, 3, 1, 2)
         if self.with_bn:
+            print("pw", self.conv1.in_channels, x.size(), self.conv1.out_channels)
             x = self.conv1(x)
             x = self.bn1(x)
             x = self.act(x)
+            print("dw", self.conv2.in_channels, x.size(), self.conv2.out_channels)
             x = self.conv2(x)
             x = self.bn2(x)
             x = self.act(x)
+            print("pw", self.conv2.in_channels, x.size(), self.conv2.out_channels)
             x = self.conv3(x)
             x = self.bn3(x)
         else:
@@ -259,7 +267,9 @@ class CeIT(nn.Module):
                  hybrid_backbone=None,
                  norm_layer=nn.LayerNorm,
                  leff_local_size=3,
-                 leff_with_bn=True):
+                 leff_with_bn=True,
+                 pretrained_cfg=None,
+                 pretrained_cfg_overlay=None):
         """
         args:
             - img_size (:obj:`int`): input image size
